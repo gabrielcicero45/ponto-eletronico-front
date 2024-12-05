@@ -5,18 +5,28 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-
-const Register = () => {
+const Register = (isAdmin:boolean) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [workSchedule, setWorkSchedule] = useState("EIGHT_HOURS");
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    const data = {
+      name,
+      email,
+      password,
+      workSchedule,
+    };
+
     try {
-      const response = await api.post("auth/register", { name, email, password });
+      const endpoint = isAdmin ? "auth/admin/register" : "auth/register"
+      const response = await api.post(endpoint, data);
       setMessage(response.data.message || "Registrado com sucesso!");
 
       localStorage.setItem("token", response.data.token);
@@ -24,48 +34,72 @@ const Register = () => {
       setMessage(error.response?.data.message || "Erro ao registrar.");
     }
   };
-  const navigate = useNavigate();
 
   return (
     <div className="max-w-md mx-auto mt-10">
       <div className="flex items-center justify-start mb-6">
-      <a onClick={()=> navigate('/login')} className="mr-5"><ArrowLeft /></a>
-      <h2 className="text-2xl font-semibold text-center ml-5">Cadastre-se</h2>
+        <button
+          onClick={() => navigate("/login")}
+          className="mr-5"
+          aria-label="Voltar para o login"
+        >
+          <ArrowLeft />
+        </button>
+        <h2 className="text-2xl font-semibold text-center ml-5">Cadastre-se</h2>
       </div>
-     
-      {message && <p>{message}</p>}
+
+      {message && <p className="mb-4 text-center text-red-500">{message}</p>}
+
       <form onSubmit={handleRegister}>
-        <div>
-          <label>Nome:</label>
+        <div className="mb-4">
+          <label className="block mb-2">Nome:</label>
           <Input
-            className='mb-4'
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            placeholder="Digite seu nome"
             required
           />
         </div>
-        <div>
-          <label>Email:</label>
+
+        <div className="mb-4">
+          <label className="block mb-2">Email:</label>
           <Input
-            className='mb-4'
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="Digite seu email"
             required
           />
         </div>
-        <div>
-          <label>Senha:</label>
+
+        <div className="mb-4">
+          <label className="block mb-2">Senha:</label>
           <Input
-            className='mb-4'
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Digite sua senha"
             required
           />
         </div>
-        <Button type="submit">Registrar</Button>
+
+        <div className="mb-4">
+          <label className="block mb-2">Carga Horária:</label>
+          <select
+            value={workSchedule}
+            onChange={(e) => setWorkSchedule(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          >
+            <option value="EIGHT_HOURS">Oito Horas</option>
+            <option value="SIX_HOURS">Seis Horas</option>
+          </select>
+        </div>
+
+        <Button type="submit" className="w-full">
+          Registrar
+        </Button>
       </form>
     </div>
   );

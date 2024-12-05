@@ -47,6 +47,7 @@ function Dashboard() {
 
 
     <h1 className="text-2xl text-center">Controle de Inquilinos</h1>
+    {currentUser.userType === 'ADMIN' ? <Button onClick={() => navigate("/register")}>Cadastre um Novo Funcionario</Button> : null}
     <Button onClick={() => registerWorkPoints(token) } className="mx-4">Bater Ponto</Button>
     
     <DataTable columns={columns} data={workPoints} />

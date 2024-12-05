@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 
 function Login() {
     const navigate = useNavigate();
-    const { isAuthenticated, login } = useAuth();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -56,7 +56,6 @@ function Login() {
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 <div className="flex p-4 items-center justify-center">
                 <Button type="submit" className='mr-4'>Entrar</Button> 
-                <Button onClick={() => navigate("/register")}>Cadastre-se</Button>
                 </div>
                 
             </form>
