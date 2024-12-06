@@ -14,7 +14,7 @@ import {
 
 export type WorkPoint = {
   id: string;
-  timestamp: Date;
+  timestamp: string;
 };
 
 function formatDate(dateString: string) {
